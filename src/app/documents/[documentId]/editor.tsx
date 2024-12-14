@@ -11,6 +11,7 @@ import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
 import Dropcursor from '@tiptap/extension-dropcursor';
 import Image from '@tiptap/extension-image';
+import TextAlign from '@tiptap/extension-text-align';
 import ImageResize from 'tiptap-extension-resize-image';
 import FontFamily from '@tiptap/extension-font-family';
 import TextStyle from '@tiptap/extension-text-style';
@@ -59,6 +60,9 @@ const { setEditor } = useEditorStore();
     extensions: [
       StarterKit,
       Underline,
+      TextAlign.configure({
+        types: ["heading", "paragraph"]
+      }),
       Link.configure({
         openOnClick: false,
         autolink:true,
