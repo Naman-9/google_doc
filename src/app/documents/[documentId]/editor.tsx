@@ -23,38 +23,36 @@ import { useEditorStore } from '@/store/use-editor-store';
 import { FontSizeExtension } from '@/extensions/font-size';
 import { LineHeightExtension } from '@/extensions/line-height';
 import { types } from 'util';
-
-
-
+import Ruler from './Ruler';
 
 export const Editor = () => {
-
-const { setEditor } = useEditorStore();
+  const { setEditor } = useEditorStore();
 
   const editor = useEditor({
-    onCreate({editor}) {
-        setEditor(editor);
+    immediatelyRender: false,
+    onCreate({ editor }) {
+      setEditor(editor);
     },
     onDestroy() {
-        setEditor(null);
+      setEditor(null);
     },
-    onUpdate({editor}) {
-        setEditor(editor)
+    onUpdate({ editor }) {
+      setEditor(editor);
     },
-    onSelectionUpdate({editor}) {
-        setEditor(editor)
+    onSelectionUpdate({ editor }) {
+      setEditor(editor);
     },
-    onTransaction({editor}) {
-        setEditor(editor)
+    onTransaction({ editor }) {
+      setEditor(editor);
     },
-    onFocus({editor}) {
-        setEditor(editor)
+    onFocus({ editor }) {
+      setEditor(editor);
     },
-    onBlur({editor}) {
-        setEditor(editor)
+    onBlur({ editor }) {
+      setEditor(editor);
     },
-    onContentError({editor}) {
-        setEditor(editor)
+    onContentError({ editor }) {
+      setEditor(editor);
     },
     editorProps: {
       attributes: {
@@ -67,17 +65,17 @@ const { setEditor } = useEditorStore();
       StarterKit,
       FontSizeExtension,
       LineHeightExtension.configure({
-        types: ["heading", "paragraph"],
-        defaultLineHeight: "normal"
+        types: ['heading', 'paragraph'],
+        defaultLineHeight: 'normal',
       }),
       Underline,
       TextAlign.configure({
-        types: ["heading", "paragraph"]
+        types: ['heading', 'paragraph'],
       }),
       Link.configure({
         openOnClick: false,
-        autolink:true,
-        defaultProtocol:"https"
+        autolink: true,
+        defaultProtocol: 'https',
       }),
       Table.configure({
         resizable: true,
@@ -97,13 +95,14 @@ const { setEditor } = useEditorStore();
       Color,
       Highlight.configure({
         multicolor: true,
-      })
+      }),
     ],
     content: '<p>Hello World! 🌎️</p>',
   });
 
   return (
     <div className="size-full overflow-x-auto bg-[#FAFBFD] px-4 print:p-0 print:bg-white print:overflow-visible">
+      <Ruler />
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:w-full print:min-w-0">
         <EditorContent editor={editor} />
       </div>
