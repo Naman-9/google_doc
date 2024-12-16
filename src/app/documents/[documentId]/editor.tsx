@@ -97,7 +97,7 @@ export const Editor = () => {
         multicolor: true,
       }),
     ],
-    content: '<p>Hello World! 🌎️</p>',
+    // content: '<p>Hello World! 🌎️</p>',
   });
 
   return (
