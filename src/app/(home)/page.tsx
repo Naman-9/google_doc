@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { Navbar } from './navbar';
+import { TemplatesGallery } from './templates-gallery';
 
 const Home = () => {
   return (
@@ -9,7 +10,7 @@ const Home = () => {
         <Navbar />
       </div>
       <div className="mt-24">
-        Click <Link href="/documents/12345">here</Link> to go to documents
+        <TemplatesGallery />
       </div>
     </div>
   );
