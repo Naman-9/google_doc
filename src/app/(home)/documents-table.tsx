@@ -68,3 +68,4 @@ export const DocumentsTable = ({ documents, loadMore, status }: DocumentsTablePr
     </div>
   );
 };
+  

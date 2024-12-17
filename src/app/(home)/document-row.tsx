@@ -4,7 +4,7 @@ import { SiGoogledocs } from "react-icons/si"
 import { Building2Icon, CircleUserIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { DocumentMenu } from './document-menu';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface DocumentRowProps {
   document: Doc<'documents'>;
