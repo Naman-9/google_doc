@@ -4,7 +4,7 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../convex/_generated/api";
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-const liveblocks= new Liveblocks({})
+const liveblocks= new Liveblocks({secret: process.env.LIVEBLOCKS_SECRET_KEY!})
 
 export async function POST(req: Request) {
     const {sessionClaims} = await auth();
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     // if document found and isownwer/ organization member make a session
     const session = liveblocks.prepareSession(user.id, {
         userInfo:{
-            name: user.fullName ?? "Anonymous",
+            name: user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
             avatar: user.imageUrl,
 
         }
