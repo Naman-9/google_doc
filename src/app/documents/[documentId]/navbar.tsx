@@ -226,7 +226,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div className="flex gap-3 items-center pl-6">
+      <div className="flex gap-3 items-center pl-4">
                 <OrganizationSwitcher 
                     afterCreateOrganizationUrl="/"
                     afterLeaveOrganizationUrl="/"
