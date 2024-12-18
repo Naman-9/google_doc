@@ -38,53 +38,77 @@ import { useEditorStore } from '@/store/use-editor-store';
 import { OrganizationSwitcher, UserButton } from '@clerk/nextjs';
 import { Avatars } from './avatars';
 import { Inbox } from './inbox';
+import { Doc } from '../../../../convex/_generated/dataModel';
+import { useMutation } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { RemoveDialog } from '@/components/remove-dialog';
+import { RenameDialog } from '@/components/rename-dialog';
 
+interface NavbarProps {
+  data: Doc<'documents'>;
+}
 
-const Navbar = () => {
-
+const Navbar = ({ data }: NavbarProps) => {
+  const router = useRouter();
   const { editor } = useEditorStore();
+
+  const mutation = useMutation(api.documents.create);
+
+  const onNewDocument = () => {
+    mutation({
+      title: 'Untitled Document',
+      initialContent: '',
+    })
+      .then((id) => {
+        toast.success('Document Created.');
+        router.push(`/documents/${id}`);
+      })
+      .catch(() => toast.error('Something went wrong.'));
+  };
+
   const insertTable = ({ rows, cols }: { rows: number; cols: number }) => {
     editor?.chain().focus().insertTable({ rows, cols, withHeaderRow: false }).run();
   };
 
   const onDownload = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
-    const a  = document.createElement('a');
+    const a = document.createElement('a');
     a.href = url;
     a.download = filename;
     a.click();
-
-  }
+  };
 
   const onSaveJson = () => {
-    if(!editor) return ;
+    if (!editor) return;
 
     const content = editor.getJSON();
     const blob = new Blob([JSON.stringify(content)], {
-      type:"application/json",
+      type: 'application/json',
     });
-    onDownload(blob, `document.json`) // TODO: use document name
-  }
+    onDownload(blob, `${data.title}.json`);
+  };
 
   const onSaveHtml = () => {
-    if(!editor) return;
+    if (!editor) return;
 
     const content = editor.getHTML();
     const blob = new Blob([content], {
-      type: "text/html",
+      type: 'text/html',
     });
-    onDownload(blob, `download.html`)  // TODO: use document name
-  }
+    onDownload(blob, `${data.title}.html`);
+  };
 
   const onSaveText = () => {
-    if(!editor) return;
+    if (!editor) return;
 
     const content = editor.getText();
     const blob = new Blob([content], {
-      type: "text/plain",
+      type: 'text/plain',
     });
-    onDownload(blob, `download.txt`)  // TODO: use document name
-  }
+    onDownload(blob, `${data.title}.txt`);
+  };
 
   return (
     <nav className="flex items-center justify-between">
@@ -95,7 +119,7 @@ const Navbar = () => {
 
         <div className="flex flex-col">
           {/* Document Input */}
-          <DocumentInput />
+          <DocumentInput title={data.title} id={data._id} />
           {/* Menu Bar */}
           <div className="flex ">
             <Menubar className="border-none bg-transparent shadow-none h-auto p-0">
@@ -128,19 +152,27 @@ const Navbar = () => {
                       </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
-                  <MenubarItem>
+                  <MenubarItem onClick={onNewDocument}>
                     <FilePlusIcon className="size-4 mr-2" />
                     New Document
                   </MenubarItem>
                   <MenubarSeparator />
-                  <MenubarItem>
-                    <FilePenIcon className="size-4 mr-2" />
-                    Rename
-                  </MenubarItem>
-                  <MenubarItem>
-                    <TrashIcon className="size-4 mr-2" />
-                    Remove
-                  </MenubarItem>
+                  <RenameDialog initialTitle={data.title} documentId={data._id}>
+                    <MenubarItem onClick={(e) => e.stopPropagation()}
+                    onSelect={(e) => e.preventDefault()}>
+                      <FilePenIcon className="size-4 mr-2" />
+                      Rename
+                    </MenubarItem>
+                  </RenameDialog>
+                  <RemoveDialog documentId={data._id}>
+                    <MenubarItem
+                      onClick={(e) => e.stopPropagation()}
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <TrashIcon className="size-4 mr-2" />
+                      Remove
+                    </MenubarItem>
+                  </RemoveDialog>
                   <MenubarSeparator />
                   <MenubarItem onClick={() => window.print()}>
                     <PrinterIcon className="size-4 mr-2" />
@@ -230,16 +262,16 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex gap-3 items-center pl-4">
-        <Avatars/>
+        <Avatars />
         <Inbox />
-                <OrganizationSwitcher 
-                    afterCreateOrganizationUrl="/"
-                    afterLeaveOrganizationUrl="/"
-                    afterSelectOrganizationUrl="/"
-                    afterSelectPersonalUrl="/"
-                />
-            </div>
-            <UserButton />
+        <OrganizationSwitcher
+          afterCreateOrganizationUrl="/"
+          afterLeaveOrganizationUrl="/"
+          afterSelectOrganizationUrl="/"
+          afterSelectPersonalUrl="/"
+        />
+      </div>
+      <UserButton />
     </nav>
   );
 };
