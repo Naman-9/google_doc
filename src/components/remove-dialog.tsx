@@ -28,7 +28,7 @@ export const RemoveDialog = ({ documentId, children }: RemoveDialogProps) => {
   const router = useRouter();
 
   return (
-    <AlertDialog>
+    <AlertDialog >
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent onClick={(e) => e.stopPropagation()}>
         <AlertDialogHeader>

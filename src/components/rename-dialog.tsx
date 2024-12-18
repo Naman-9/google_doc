@@ -38,11 +38,13 @@ export const RenameDialog = ({ documentId, initialTitle, children }: RemoveDialo
     update({ id: documentId, title: title.trim() || "Untitled"})
       .then(() => {
         setOpen(false);
-        toast.success("Document Renamed.")
+        toast.success("Document Renamed.");
+
       })  
       .catch(()=>toast.error("Something went wrong."))
 
       .finally(() => {
+        
         setIsUpdating(false);
       })
   }
